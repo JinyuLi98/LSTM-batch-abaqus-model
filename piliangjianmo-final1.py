@@ -26,7 +26,7 @@ import connectorBehavior
 import numpy as np
 import random
 import time
-def random_property(fy ,fu , epoc):
+def random_property(fy ,fu , epoc):    #材料随机性
     a_y_list = []
     a_u_list = []
 
@@ -44,7 +44,7 @@ def random_property(fy ,fu , epoc):
         real_fu = list(np.array(a_u_list) * fu)
     return real_fy, real_fu
 
-def high_temp_constitutive_relation_EC3(fy,fu,E):
+def high_temp_constitutive_relation_EC3(fy,fu,E):   #EC3本构，为了隐式计算顺利，进行了最终值的修改
     elastic =np.array([[E, 0.3, 20],[E, 0.3, 100], [0.9 * E, 0.3, 200],[0.8 * E, 0.3, 300],[0.7 * E, 0.3, 400],
                [0.6 * E, 0.3, 500], [0.31 * E, 0.3, 600], [0.13 * E, 0.3, 700], [0.09 * E, 0.3, 800],[0.0675 * E, 0.3, 900],[0.045 * E, 0.3, 1000]])
     fyt = np.array([[fy,20],[fy,100],[fy,200],[fy,300],[fy,400],[0.78*fy,500],[0.47*fy,600],[0.23*fy,700],[0.11*fy,800],[0.06*fy,900],[0.04*fy,1000]])
@@ -148,7 +148,7 @@ def high_temp_constitutive_relation_EC3(fy,fu,E):
     elastic =  tuple([tuple(p) for p in elastic])
     return final_result, elastic
 
-def random_load(qmax,epoc):
+def random_load(qmax,epoc):   #随机荷载，考虑左右均不相同
     l = np.zeros(8)
     r = np.zeros(8)
     L = np.zeros((50, 8))
@@ -232,7 +232,7 @@ def steel_temp_field(air_temp_field):    #空气温度场
     #final_result = tuple([tuple(e) for e in final_web_temp[0,:,:]])
     return final_chord_temp, final_web_temp
 
-def random_beta(epoc):
+def random_beta(epoc):   #空气升温曲线，随机选择
     beta = [0.0004,0.0008,0.0018,0.002]
     final_beta = []
     for i in range(50):
@@ -258,7 +258,7 @@ model_beta = random_beta(epoc)
 #print(model_fire_bay)
 #print(model_beta)
 
-for num_t in range(4):
+for num_t in range(50):   #计算一组，50个工况
     model_name = "Model-" + str(num_t+1)
     fire_span_string = model_fire_span[num_t]
     fire_bay_string = model_fire_bay[num_t]
@@ -269,7 +269,7 @@ for num_t in range(4):
     #计算升温曲线
     cv = air_temp_field(model_beta[num_t], fire_span_string)
     chord_temp, web_temp = steel_temp_field(cv)
-    chord_temp_tuple_1 = tuple([tuple(e) for e in chord_temp[0, :, :]])
+    chord_temp_tuple_1 = tuple([tuple(e) for e in chord_temp[0, :, :]])     #将数组均转化为元组的形式
     web_temp_tuple_1 = tuple([tuple(e) for e in web_temp[0, :, :]])
     chord_temp_tuple_2 = tuple([tuple(e) for e in chord_temp[1, :, :]])
     web_temp_tuple_2 = tuple([tuple(e) for e in web_temp[1, :, :]])
@@ -282,7 +282,7 @@ for num_t in range(4):
     ####结束
     mdb.Model(name=model_name,
               modelType=STANDARD_EXPLICIT)
-    iges = mdb.openIges('G:/jinyu/liangce-trapzoid-LSTM/rinho/span-24-6-many.igs',
+    iges = mdb.openIges('G:/jinyu/liangce-trapzoid-LSTM/rinho/span-24-6-many.igs',    #导入的模型已上传
         msbo=False, trimCurve=DEFAULT, topology=WIRE, scaleFromFile=OFF)
     mdb.models[model_name].PartFromGeometryFile(name='span-24-6-many',
         geometryFile=iges, combine=False, stitchTolerance=1.0,
