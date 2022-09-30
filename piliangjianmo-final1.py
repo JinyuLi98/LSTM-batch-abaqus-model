@@ -3221,4 +3221,7 @@ mdb.saveAs(pathName='G:/jinyu/liangce-trapzoid-LSTM/abaqus cae/batch1.cae')
 #    time.sleep(60)
 #mdb.jobs['basic-model'].submit(consistencyChecking=OFF)
 mdb.saveAs(pathName='G:/jinyu/liangce-trapzoid-LSTM/abaqus cae/Batch1')
-
+#for c_t in range(25):   #批量计算，建议另一个程序中执行
+#    mdb.jobs["basic"+"Model-" + str(c_t+1)].submit(consistencyChecking=OFF)
+#    mdb.jobs["basic" + "Model-" + str(51-(c_t + 1))].submit(consistencyChecking=OFF)
+#    mdb.jobs["basic" + "Model-" + str(51-(c_t + 1))].waitForCompletion()
